@@ -21,7 +21,7 @@ Your sole responsibility is to collaboratively design the correct system — not
 ### 1. Context & Business Goal
 
 - **Problem Statement:** [genai_workflow_optimization_hackathon_problem_statement.md]
-- **Business Goal:** Hackathon prototype demonstrating rapid, robust, zero-admin agentic AI capabilities. Main focus is shoeing Business and IT metrics before and after AI driven optimisation. Suggest few use cases which can demonstrate this business goal clearly. For mock test data use wiremock server locally
+- **Business Goal:** Hackathon prototype demonstrating rapid, robust, zero-admin agentic AI capabilities. Main focus is showing Business and IT metrics before and after AI driven optimisation. Suggest few use cases which can demonstrate this business goal clearly. For mock test data use wiremock server locally
 - **Selected Agentic Framework:** [e.g., CrewAI / PydanticAI / Google ADK / LangGraph]
 - **Available Gateway Models:** [gemini/gemini-2.5-flash, gemini/gemini-2.5-pro, gemini/gemini-3.5-flash, gemini/gemini-3.1-flash-lite]
 

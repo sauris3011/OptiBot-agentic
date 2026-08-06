@@ -83,8 +83,29 @@ def ground_check(state: TicketState) -> dict:
         unsupported=report.unsupported_claim_count,
         coverage=report.citation_coverage,
         contradicts_source=report.contradicts_source,
+        verdicts_returned=len(report.verdicts),
     )
     if report.contradicts_source:
         log.warning("draft_contradicts_source", run_id=state["run_id"])
+
+    # A judge that returned fewer verdicts than cited claims did not do the job.
+    # Failing closed already forces human review, but marking the run degraded
+    # keeps these out of the clean hallucination statistics -- otherwise a
+    # non-answer would be indistinguishable from a confident "all unsupported".
+    if report.judgement_incomplete:
+        log.error(
+            "ground_check_incomplete",
+            verdicts=len(report.verdicts),
+            cited_claims=total - uncited,
+        )
+        return {
+            "grounding": report,
+            "degraded": True,
+            "errors": [
+                *state.get("errors", []),
+                f"{NODE}: judge returned {len(report.verdicts)} verdicts "
+                f"for {total - uncited} cited claims",
+            ],
+        }
 
     return {"grounding": report}

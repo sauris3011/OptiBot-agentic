@@ -43,6 +43,14 @@ class GroundingReport(BaseModel):
     citation_coverage: float = Field(default=0.0, ge=0.0, le=1.0)
     contradicts_source: bool = False
 
+    #: True when the judge returned fewer verdicts than there were cited claims.
+    #: An empty `verdicts` list is schema-VALID but is not a judgement -- it is a
+    #: non-answer. Counting those claims as unsupported is the right safety
+    #: behaviour, but reporting it as a confident grounding result would be a
+    #: lie, and would silently corrupt the hallucination metric with runs where
+    #: the judge never actually ran.
+    judgement_incomplete: bool = False
+
     @classmethod
     def derive(
         cls,
@@ -66,6 +74,7 @@ class GroundingReport(BaseModel):
         unsupported = judged_unsupported + uncited_claims + unjudged
         supported = max(0, total_claims - unsupported)
 
+        cited_claims = max(0, total_claims - uncited_claims)
         return cls(
             verdicts=judgement.verdicts,
             unsupported_claim_count=unsupported,
@@ -75,6 +84,7 @@ class GroundingReport(BaseModel):
                 not v.supported and "contradict" in v.rationale.lower()
                 for v in judgement.verdicts
             ),
+            judgement_incomplete=len(judgement.verdicts) < cited_claims,
         )
 
     @property

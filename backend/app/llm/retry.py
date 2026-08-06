@@ -28,6 +28,23 @@ RETRYABLE_STATUS = frozenset({408, 409, 429, 500, 502, 503, 504})
 #: and retrying one burns quota while hiding the real error from the operator.
 NON_RETRYABLE_STATUS = frozenset({400, 401, 403, 404, 422})
 
+#: Substrings marking a 429 that is a HARD quota exhaustion rather than
+#: transient throttling. Backing off five times against depleted credits wastes
+#: 30+ seconds and buries the real cause -- a billing problem -- under retry
+#: noise. These fail fast with the actual message.
+TERMINAL_429_MARKERS = (
+    "credits are depleted",
+    "resource_exhausted",
+    "quota exceeded",
+    "billing",
+    "insufficient_quota",
+)
+
+
+def _is_terminal_quota_error(exc: Exception) -> bool:
+    text = str(exc).lower()
+    return any(marker in text for marker in TERMINAL_429_MARKERS)
+
 
 class TokenBudgetExceeded(RuntimeError):
     """Process-lifetime token cap reached."""
@@ -149,6 +166,14 @@ def call_with_retry(fn: Callable[[], T], *, node: str = "unknown") -> RetryOutco
             if status in NON_RETRYABLE_STATUS:
                 raise GatewayError(
                     f"Gateway rejected the request (HTTP {status}): {exc}",
+                    status=status,
+                    attempts=attempt + 1,
+                ) from exc
+
+            if status == 429 and _is_terminal_quota_error(exc):
+                raise GatewayError(
+                    "Gateway quota or credits exhausted - this will not recover by retrying. "
+                    f"Original error: {exc}",
                     status=status,
                     attempts=attempt + 1,
                 ) from exc
