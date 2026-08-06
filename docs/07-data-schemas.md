@@ -110,6 +110,7 @@ CREATE TABLE spans (
   resolved_model TEXT,
   tokens_in      INTEGER,
   tokens_out     INTEGER,
+  reasoning_tokens INTEGER NOT NULL DEFAULT 0,   -- billed as output, absent from the body
   cost_usd       REAL,
   cost_estimated INTEGER DEFAULT 0,
   latency_ms     INTEGER NOT NULL,
@@ -128,6 +129,12 @@ CREATE INDEX idx_spans_run ON spans(run_id);
 
 `prompt_hash` rather than prompt text: it gives reproducibility verification and cache correlation
 without persisting content that redaction would then have to police (FR-2.5).
+
+`reasoning_tokens` is separated from `tokens_out` because the two behave differently. Reasoning
+tokens are billed but invisible in the response, and they are the dominant term in the tier cost
+gap (measured 575–717 on tier1 versus 0 on tier3 for the same classification). Folding them into
+`tokens_out` would still price correctly but would hide *why* the optimized arm is cheaper — which
+is the one thing the comparison exists to explain.
 
 ### 2.3 `reviews` — human decisions (FR-2.6)
 

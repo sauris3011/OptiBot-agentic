@@ -28,10 +28,14 @@ REQUIRED_ENV = ("LITELLM_GATEWAY_URL", "LITELLM_API_KEY")
 
 # Tier -> candidate model ids, most preferred first. The probe resolves each
 # tier to the first candidate the gateway actually serves (PRD §4.3, §9).
+#
+# Ids are BARE, matching /v1/models exactly. The provider prefix is applied at
+# call time by the backend, not stored here.
+# Keep in sync with backend/app/config/model_registry.py.
 MODEL_TIERS: dict[str, tuple[str, ...]] = {
-    "tier1": ("gemini/gemini-3.5-flash", "gemini/gemini-2.5-pro"),
-    "tier2": ("gemini/gemini-2.5-flash",),
-    "tier3": ("gemini/gemini-3.1-flash-lite", "gemini/gemini-2.5-flash"),
+    "tier1": ("gemini-3.5-flash", "gemini-2.5-pro"),
+    "tier2": ("gemini-2.5-flash", "gemini-3.5-flash"),
+    "tier3": ("gemini-3.1-flash-lite", "gemini-2.5-flash"),
 }
 
 
@@ -218,7 +222,13 @@ def check_gateway() -> bool:
     if not os.environ.get("LITELLM_GATEWAY_URL"):
         return record("Gateway reachability", False, "LITELLM_GATEWAY_URL is not set.")
     try:
-        status, _ = _gateway_get("/health")
+        # /health can be slow or absent depending on gateway configuration, so
+        # fall back to /v1/models -- the endpoint the system actually depends
+        # on. A gateway that lists models is reachable by any useful definition.
+        try:
+            status, _ = _gateway_get("/health", timeout=8.0)
+        except (TimeoutError, OSError, urllib.error.URLError):
+            status, _ = _gateway_get("/v1/models", timeout=20.0)
     except urllib.error.HTTPError as exc:
         if exc.code in (401, 403):
             return record(

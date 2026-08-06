@@ -38,16 +38,49 @@ No code anywhere references a concrete model ID. Nodes request a **tier**; `conf
 resolves it from `data/resolved_models.json`, written by preflight against the gateway's real model
 list.
 
-| Tier | Role | Baseline usage | Optimized usage |
+| Tier | Resolved model | Baseline usage | Optimized usage |
 |---|---|---|---|
-| `tier1` | Most capable | Every node | `ground_check` only |
-| `tier2` | Mid | — | `draft` |
-| `tier3` | Lite | — | `classify`, `guardrail_pre`, `guardrail_post` |
+| `tier1` | `gemini-3.5-flash` | Every node | `ground_check` only |
+| `tier2` | `gemini-2.5-flash` | — | `draft` |
+| `tier3` | `gemini-3.1-flash-lite` | — | `classify`, `guardrail_pre`, `guardrail_post` |
 
-This indirection is what makes the PRD §9 model-availability risk survivable: if the 3.x models are
-absent, tiers collapse onto the confirmed 2.5 pair at startup, the run continues, and the
-comparison remains valid — the *shape* of the optimization (spend where quality matters) is
-preserved even if the specific models change.
+Resolved against the live gateway on 2026-08-06. `gemini-2.5-pro` is not served and was dropped from
+the candidate list. The indirection means that outcome cost nothing: candidates changed, no code did.
+
+### 2.1 Model ids carry a provider prefix at call time
+
+The gateway lists **bare** ids (`gemini-3.5-flash`). Passing one to LiteLLM unprefixed makes it
+recognise a Gemini model and route straight to Vertex AI — failing with a Google Cloud SDK import
+error without ever contacting the local proxy.
+
+`settings.litellm_model_prefix` (default `litellm_proxy/`) is applied by
+`ModelRegistry.qualified_model_for()`. Spans record the **bare** id, so telemetry stays readable
+while the call itself is correctly routed. `openai/` works identically; `litellm_proxy/` states
+intent.
+
+### 2.2 Reasoning tokens are the cost delta
+
+Measured on an identical ticket classification:
+
+| Tier | Model | Output tokens | Of which reasoning | Latency |
+|---|---|---|---|---|
+| `tier1` | `gemini-3.5-flash` | 607–741 | 575–717 | 6.8–8.7s |
+| `tier2` | `gemini-2.5-flash` | 341 | 323 | 3.1s |
+| `tier3` | `gemini-3.1-flash-lite` | **19–31** | **0** | **0.9–1.1s** |
+
+All three returned an equally correct answer. Reasoning tokens are billed as output but never appear
+in the response body, so without capturing them separately the single largest driver of the cost
+delta would be invisible in telemetry. `spans.reasoning_tokens` records them.
+
+Two consequences for the implementation:
+
+- **`max_tokens` covers reasoning as well as output.** A tight ceiling truncates to *empty content*,
+  which would then surface as a schema violation — misattributing a budgeting bug to prompt quality.
+  Default raised to 8192, with explicit `ResponseTruncated` detection on `finish_reason == "length"`
+  so the real cause is legible and `schema_violation_rate` stays honest.
+- **This is the optimization story in miniature.** Paying a reasoning model to reason about a
+  constrained-label classification is a real and common enterprise waste pattern, and removing it is
+  worth −95% output tokens, −87% cost, and −86% latency on that node alone.
 
 ---
 

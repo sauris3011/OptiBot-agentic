@@ -6,7 +6,7 @@ idempotent so startup can run this unconditionally.
 
 from __future__ import annotations
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 #: Executed in order at startup by persistence/db.py.
 DDL: tuple[str, ...] = (
@@ -30,6 +30,7 @@ DDL: tuple[str, ...] = (
       decision_reason    TEXT,
       tokens_in          INTEGER NOT NULL DEFAULT 0,
       tokens_out         INTEGER NOT NULL DEFAULT 0,
+      reasoning_tokens   INTEGER NOT NULL DEFAULT 0,
       cost_usd           REAL    NOT NULL DEFAULT 0,
       cost_estimated     INTEGER NOT NULL DEFAULT 0,
       latency_ms         INTEGER,
@@ -61,6 +62,11 @@ DDL: tuple[str, ...] = (
       resolved_model    TEXT,
       tokens_in         INTEGER,
       tokens_out        INTEGER,
+      -- Billed as output but absent from the response body. Captured separately
+      -- because it is the single largest driver of the cost delta between tiers
+      -- (measured: 717 / 323 / 0 across tier1 / tier2 / tier3 on an identical
+      -- classification). Without this column the main effect is invisible.
+      reasoning_tokens  INTEGER NOT NULL DEFAULT 0,
       cost_usd          REAL,
       cost_estimated    INTEGER NOT NULL DEFAULT 0,
       latency_ms        INTEGER NOT NULL,

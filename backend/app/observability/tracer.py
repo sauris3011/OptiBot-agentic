@@ -40,6 +40,7 @@ class Span:
     resolved_model: str | None = None
     tokens_in: int | None = None
     tokens_out: int | None = None
+    reasoning_tokens: int = 0
     cost_usd: float | None = None
     cost_estimated: bool = False
     cache_status: str | None = None  # hit_exact | hit_semantic | miss | bypassed
@@ -55,10 +56,10 @@ class Span:
 _INSERT = """
 INSERT INTO spans (
   span_id, run_id, parent_span_id, node, kind, tier, resolved_model,
-  tokens_in, tokens_out, cost_usd, cost_estimated, latency_ms, cache_status,
-  retry_count, schema_valid, repair_attempted, guardrail_verdict, chunk_ids,
-  prompt_hash, error_code, created_at
-) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+  tokens_in, tokens_out, reasoning_tokens, cost_usd, cost_estimated, latency_ms,
+  cache_status, retry_count, schema_valid, repair_attempted, guardrail_verdict,
+  chunk_ids, prompt_hash, error_code, created_at
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 """
 
 
@@ -126,6 +127,7 @@ def emit(span: Span) -> None:
                 span.resolved_model,
                 span.tokens_in,
                 span.tokens_out,
+                span.reasoning_tokens,
                 span.cost_usd,
                 int(span.cost_estimated),
                 span.latency_ms,

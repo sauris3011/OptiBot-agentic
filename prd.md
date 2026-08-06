@@ -174,6 +174,19 @@ Tier-1/2/3 resolve to concrete gateway models at startup via the model-list prob
 the most capable model on the trust-critical node is intentional and central to the narrative:
 optimization means **spending where quality matters**, not cutting uniformly.
 
+**Resolved against the live gateway (2026-08-06):** Tier-1 `gemini-3.5-flash`, Tier-2
+`gemini-2.5-flash`, Tier-3 `gemini-3.1-flash-lite`. `gemini-2.5-pro` is not served by this gateway
+and has been removed from the candidate list.
+
+**Measured driver of the cost delta — reasoning tokens.** On an identical ticket classification,
+the three tiers emitted 575–717 / 323 / **0** reasoning tokens respectively. Reasoning tokens are
+billed as output but never appear in the response body. Tier-1 therefore spends ~20x the output
+tokens of Tier-3 to produce an equally correct constrained-label answer.
+
+This is the clearest expression of the product thesis, and a genuinely common enterprise waste
+pattern: paying a reasoning model to reason about a task that requires no reasoning. Measured
+single-node result — output tokens −95%, cost −87%, latency −86%.
+
 ### 4.4 RAG Strategy
 
 - **Vector store:** LanceDB, in-process against a local directory. No daemon, no port.
@@ -397,7 +410,8 @@ Explicitly excluded to prevent scope creep:
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| `gemini-3.5-flash` / `gemini-3.1-flash-lite` unconfirmed on the gateway | Model tiering fails at demo time | Startup model-list probe fails fast with a clear message; tiering falls back to the confirmed 2.5 pair |
+| ~~3.x models unconfirmed~~ **RESOLVED 2026-08-06** | — | Gateway probe confirmed all three tiers serve. `gemini-2.5-pro` proved absent instead and was removed from the candidate list; the three flash-class models form a clean ladder on their own |
+| Reasoning-token spend on Tier-1 nodes exceeds a tight `max_tokens`, truncating to empty content | Silent schema violations misattributed to prompt quality | `max_tokens` set to 8192 with explicit `ResponseTruncated` detection, so a token-ceiling bug never inflates `schema_violation_rate` |
 | Full A2A spec competes with dashboard build time | Scoring-critical path at risk | A2A built only after the comparison dashboard is functional; streaming sheds first if time compresses |
 | Corporate network blocks the embedding model download | RAG unavailable | Preflight detects and reports explicitly; model cached ahead of the demo |
 | Optimized arm shows quality regression alongside cost savings | Undermines the narrative | `ground_check` and gold-set scoring surface this early; tier assignment is tunable per node |

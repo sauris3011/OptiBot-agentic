@@ -32,6 +32,12 @@ class Settings(BaseSettings):
     litellm_gateway_url: str = Field(..., min_length=1)
     litellm_api_key: str = Field(..., min_length=1)
 
+    #: Provider prefix applied to every model id at call time. The gateway lists
+    #: bare ids ("gemini-3.5-flash"), but LiteLLM would read that as a direct
+    #: Vertex AI request and never reach the proxy. "litellm_proxy/" and
+    #: "openai/" both work against a LiteLLM proxy; the former states intent.
+    litellm_model_prefix: str = "litellm_proxy/"
+
     # --- Ports (NFR-1.3: all must exceed 1024) ---------------------------
     backend_port: int = 8787
     frontend_port: int = 3939

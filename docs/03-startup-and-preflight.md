@@ -59,17 +59,20 @@ candidate genuinely present:
 
 ```python
 MODEL_TIERS = {
-    "tier1": ("gemini/gemini-3.5-flash",      "gemini/gemini-2.5-pro"),
-    "tier2": ("gemini/gemini-2.5-flash",),
-    "tier3": ("gemini/gemini-3.1-flash-lite", "gemini/gemini-2.5-flash"),
+    "tier1": ("gemini-3.5-flash",      "gemini-2.5-pro"),
+    "tier2": ("gemini-2.5-flash",      "gemini-3.5-flash"),
+    "tier3": ("gemini-3.1-flash-lite", "gemini-2.5-flash"),
 }
 ```
 
-This directly retires the open risk carried from Phase 1. If `gemini-3.5-flash` and
-`gemini-3.1-flash-lite` do not exist on your gateway, tiers fall back to the confirmed 2.5 pair
-**automatically and visibly** — the resolution is printed and written to
-`data/resolved_models.json`, which the backend then reads. No code references a model ID directly;
-everything references a tier.
+Ids are **bare**, matching `/v1/models` exactly; the provider prefix is applied at call time by the
+backend, not stored here.
+
+This retired the open risk carried from Phase 1 — and inverted it. The probe confirmed all three
+3.x/2.5 flash models are served; it was `gemini-2.5-pro` that proved absent. Because no code
+references a model id directly, that outcome cost one line in a candidate tuple.
+
+Resolution is printed and written to `data/resolved_models.json`, which the backend reads.
 
 The failure message names every model the gateway *does* serve, so a mismatch is diagnosable in one
 glance rather than by trial and error.

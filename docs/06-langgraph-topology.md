@@ -95,6 +95,9 @@ truthful and makes any run reconstructible from its spans alone.
 
 ## 3. Nodes
 
+Resolved tiers: `tier1` = `gemini-3.5-flash`, `tier2` = `gemini-2.5-flash`,
+`tier3` = `gemini-3.1-flash-lite`.
+
 | Node | LLM | Tier (baseline → optimized) | Output schema | Purpose |
 |---|---|---|---|---|
 | `ingest` | No | — | `Ticket` | Normalise, assign `run_id`, open root span |

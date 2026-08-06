@@ -31,12 +31,23 @@ class ModelTier(StrEnum):
     TIER3 = "tier3"  # lite          - classify, guardrails (optimized)
 
 
-#: Candidates per tier, most preferred first. The first one the gateway
-#: actually serves wins. Keep in sync with scripts/preflight.py.
+#: Candidates per tier, most preferred first. The first one the gateway actually
+#: serves wins. Keep in sync with scripts/preflight.py.
+#:
+#: Ids are BARE, exactly as the gateway lists them in /v1/models. The provider
+#: prefix (settings.litellm_model_prefix) is applied at call time by
+#: llm/client.py -- an unprefixed name makes LiteLLM route to Vertex AI directly
+#: instead of to the local proxy.
+#:
+#: gemini-2.5-pro is retained only as a portability fallback -- THIS gateway does
+#: not serve it, so it never wins. The three flash-class models form a clean
+#: capability ladder on their own, and the measured reasoning-token spread
+#: between them (575-717 / 323 / 0 on an identical classification) is what the
+#: optimization story rests on.
 TIER_CANDIDATES: dict[ModelTier, tuple[str, ...]] = {
-    ModelTier.TIER1: ("gemini/gemini-3.5-flash", "gemini/gemini-2.5-pro"),
-    ModelTier.TIER2: ("gemini/gemini-2.5-flash",),
-    ModelTier.TIER3: ("gemini/gemini-3.1-flash-lite", "gemini/gemini-2.5-flash"),
+    ModelTier.TIER1: ("gemini-3.5-flash", "gemini-2.5-pro"),
+    ModelTier.TIER2: ("gemini-2.5-flash", "gemini-3.5-flash"),
+    ModelTier.TIER3: ("gemini-3.1-flash-lite", "gemini-2.5-flash"),
 }
 
 
@@ -52,6 +63,7 @@ class ModelRegistry:
         self.source = source
 
     def model_for(self, tier: ModelTier) -> str:
+        """Bare model id, as the gateway lists it. Use for logging and spans."""
         try:
             return self._resolved[str(tier)]
         except KeyError as exc:
@@ -60,6 +72,17 @@ class ModelRegistry:
                 "`startup.sh --preflight` to probe the gateway and refresh "
                 "data/resolved_models.json."
             ) from exc
+
+    def qualified_model_for(self, tier: ModelTier) -> str:
+        """Prefixed model id for the LiteLLM call itself.
+
+        Without the prefix LiteLLM inspects the bare name, recognises it as a
+        Gemini model, and routes straight to Vertex AI -- failing with a Google
+        Cloud SDK import error rather than reaching the local proxy.
+        """
+        from app.config.settings import get_settings
+
+        return f"{get_settings().litellm_model_prefix}{self.model_for(tier)}"
 
     def as_dict(self) -> dict[str, str]:
         return dict(self._resolved)
