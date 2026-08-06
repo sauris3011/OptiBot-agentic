@@ -21,7 +21,7 @@ Your sole responsibility is to collaboratively design the correct system — not
 ### 1. Context & Business Goal
 
 - **Problem Statement:** [genai_workflow_optimization_hackathon_problem_statement.md]
-- **Business Goal:** Hackathon prototype demonstrating rapid, robust, zero-admin agentic AI capabilities. Main focus is showing Business and IT metrics before and after AI driven optimisation. Suggest few use cases which can demonstrate this business goal clearly. For mock test data use wiremock server locally
+- **Business Goal:** Hackathon prototype demonstrating rapid, robust, zero-admin agentic AI capabilities. [Fill it as per usecase. e.g. Main focus is showing Business and IT metrics before and after AI driven optimisation]. Suggest few use cases which can demonstrate this business goal clearly. For mock API test data use mockserver locally
 - **Selected Agentic Framework:** [e.g., CrewAI / PydanticAI / Google ADK / LangGraph]
 - **Available Gateway Models:** [gemini/gemini-2.5-flash, gemini/gemini-2.5-pro, gemini/gemini-3.5-flash, gemini/gemini-3.1-flash-lite]
 
@@ -31,21 +31,21 @@ Your sole responsibility is to collaboratively design the correct system — not
 
 - **Runtime & Execution:** 
   - **Environment:** User-space execution strictly — **zero Docker/containers, zero root/admin privileges, zero system-wide background daemons**.
-  - **Stack:** Python 3.x (`venv`) for backend AI agent pipelines + Node.js 22.x for Next.js frontend (if decoupled UI is used).
+  - **Stack:** Python 3.x (`venv`) for backend AI agent pipelines + Node.js 22.x for React.js frontend (if decoupled UI is used).
   - **Networking:** Local server processes (FastAPI / Uvicorn) must run exclusively on unprivileged ports (`> 1024`).
 - **Embedded Storage (Vector RAG + Relational + Caching):**
   - All storage must be local file-based and embedded (in-process).
-  - **Vector Database (RAG):** **LanceDB** (or ChromaDB local disk mode) for vector storage and semantic retrieval without external server daemons.
+  - **Vector Database (RAG):** **ChromaDB** (or Faiss, LanceDB local disk mode) for vector storage and semantic retrieval without external server daemons.
   - **Relational & LLM Cache:** Embedded **SQLite** (or LiteLLM local disk cache) serving a dual purpose:
     1. Application state & agent run metadata.
     2. Persistent LLM prompt/response pairs (exact match and semantic caching) to eliminate redundant LLM gateway costs and minimize latency.
 - **Agent Interoperability & A2A Protocol:**
   - Support for the **Agent-to-Agent (A2A) Protocol** (REST / JSON-RPC endpoints) allowing agents to discover, authenticate, and communicate across boundaries.
 - **Backend-Only LLM Routing & LiteLLM:** 
-  - All LLM interactions must route through the LiteLLM library on the backend (Python FastAPI or Next.js Route Handlers).
+  - All LLM/SLM/Embedding model interactions must route through the LangChain library (using init_chat_model utility function to make LLM call model_provider agnostic) on the backend (Python FastAPI).
   - The UI/Client must never call the LLM gateway directly.
 - **Observability & Traceability:**
-  - Integrated zero-admin telemetry via SaaS SDKs (**AgentOps**, **Langfuse**, or **Helicone**) to log agent steps, execution duration, token usage, and tool calls.
+  - Integrated zero-admin telemetry via SaaS SDKs (**LangSmith** or **Langfuse**) to log agent steps, execution duration, token usage, and tool calls.
 - **Strict Structured Output:** 
   - Every LLM response used for application logic, agent routing, or data extraction must return strict JSON and be validated through schemas (**Pydantic** in Python / **Zod** in TypeScript) before entering the pipeline.
 - **Corporate Network & TLS (Critical):** 
@@ -53,8 +53,8 @@ Your sole responsibility is to collaboratively design the correct system — not
 
   **For Python / LiteLLM side:**
   - `export SSL_VERIFY="False"`
-  - or `litellm.ssl_verify = False`
-  - or `litellm.ssl_security_level = "DEFAULT@SECLEVEL=1"`
+  - or `llm.ssl_verify = False`
+  - or `llm.ssl_security_level = "DEFAULT@SECLEVEL=1"`
 
   **For Node.js / Next.js side (if applicable):**
   - HTTP agents with `rejectUnauthorized: false`
@@ -67,10 +67,10 @@ Your sole responsibility is to collaboratively design the correct system — not
 ### 3. Enterprise Operations, Resiliency & Developer Experience
 
 - Cross-platform one-click startup scripts (`startup.sh` + `startup.bat`) with pre-flight validation.
-- Pre-flight checks must verify: Python virtual environment (`venv`), Node.js 20.x (if UI included), required environment variables, local LanceDB / SQLite directory permissions, and LiteLLM gateway reachability. Fail fast with clear error messages.
+- Pre-flight checks must verify: Python virtual environment (`venv`), Node.js 20.x (if UI included), required environment variables, local Vecctor DB / SQLite directory permissions, and LiteLLM gateway reachability. Fail fast with clear error messages.
 - Boot-time environment validation using Pydantic / Zod schemas.
 - LLM request wrappers must include exponential-backoff retries for transient failures (429, 502, 503, etc.).
-- Graceful shutdown: handle `SIGINT` / `SIGTERM` signals and cleanly flush agent logs, close SQLite connections, and safely shut down LanceDB writers to prevent file corruption.
+- Graceful shutdown: handle `SIGINT` / `SIGTERM` signals and cleanly flush agent logs, close SQLite connections.
 - Structured JSON logging (e.g., `structlog` in Python, `pino` in Node.js) that records for every agent action and LLM call: latency, token usage, model used, cache hit/miss, with automatic secret/PII redaction.
 
 ---
@@ -82,7 +82,7 @@ Your sole responsibility is to collaboratively design the correct system — not
 - Strict separation of concerns:
   - Agent definitions & tools
   - API routes & A2A endpoints
-  - RAG ingestion & LanceDB query services
+  - RAG ingestion & Vector DB query services
   - Prompt templates & Pydantic schemas
   - Database & caching layer
   - Shared utilities / TLS helpers
@@ -94,13 +94,13 @@ Your sole responsibility is to collaboratively design the correct system — not
 ### 5. UI & Frontend Guidelines (Hackathon Prototype Standards)
 
 The frontend must include the following mandatory UI elements and capabilities:
-- **Global Design:** Next.js (App Router) + Tailwind CSS. Minimal enterprise aesthetic. **No emojis.** All icons must be from a vector library (e.g., Lucide).
+- **Global Design:** React.js (React Router) + Vite.js + Tailwind CSS. Minimal enterprise aesthetic. **No emojis.** All icons must be from a vector library (e.g., Lucide).
 - **Theme Toggle:** Explicit Light / Dark mode toggle using CSS variables + Tailwind semantic tokens.
 - **Global Header LLM Monitor:** A persistent header widget displaying real-time telemetry from LiteLLM:
   - Number of active LLM calls.
   - Cumulative input/output tokens used.
   - Estimated cost (default to standard LiteLLM fallback rates if the model is unknown).
-- **Settings Gear Modal:** A configuration modal accessible globally containing:
+- **Settings Gear Drawer:** A configuration drawer accessible globally containing:
   - Input fields to dynamically configure the LiteLLM Gateway URL, Port, and Password/API Key.
   - An iOS-style toggle switch for the "Disable SSL Verification" flag.
   - Real-time caching statistics (cache hit vs. miss ratios).
@@ -156,15 +156,15 @@ Only after I explicitly say **“Proceed to Phase 2”** produce the following d
    
    *(CRITICAL RULE: Once `prd.md` is approved, you MUST use it as the strict reference guide. All code generation, API design, and file layouts in later phases must align perfectly with the requirements established in this document.)*
 
-2. Local project architecture and file layout (Python `venv` + FastAPI/Next.js).
+2. Local project architecture and file layout (Python `venv` + FastAPI/React).
 3. Startup automation scripts (`startup.sh` + `startup.bat`) with pre-flight checks.
 4. Backend API architecture & A2A endpoint specs.
 5. LiteLLM & AgentOps integration strategy (including TLS bypass handling).
 6. Agent topology & workflow definition (Framework-specific).
-7. LanceDB & SQLite schema definitions (application state + cache).
-8. Caching strategy (LiteLLM Disk Cache / SQLite).
-9. Logging & observability strategy.
-10. UI component / design-token architecture (including the Header Monitor & Settings Modal).
+7. ChromaDB & SQLite schema definitions (application state + cache).
+8. Caching strategy (Local Disk Cache / SQLite).
+9. Centralised logging & observability strategy.
+10. UI component / design-token architecture (including the Header Monitor & Settings Drawer).
 11. Development roadmap.
 
 ---
@@ -180,7 +180,7 @@ Begin every response by covering these points concisely:
    Map the available LiteLLM models to specific agent roles. Explain how strict JSON output will be enforced (Pydantic / Zod validation).
 
 3. **RAG & Vector DB Integration Strategy**  
-   Explain how LanceDB will handle file-based local embeddings without background servers, and how grounding will be enforced on all calls.
+   Explain how ChromaDB will handle file-based local embeddings without background servers, and how grounding will be enforced on all calls.
 
 4. **Constraint & TLS Confirmation**  
    Confirm how the architecture satisfies user-space execution, unprivileged ports, embedded LanceDB/SQLite dual-purpose caching, LiteLLM backend routing, A2A readiness, and TLS-bypass rules. Note security trade-offs.
