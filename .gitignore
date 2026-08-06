@@ -1,0 +1,32 @@
+# Environment
+.env
+.venv/
+venv/
+
+# Embedded stores and generated artifacts (fully disposable -- deleting data/
+# and re-running ingestion + batch eval reproduces the demo from seed/)
+data/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+.next/
+out/
+npm-debug.log*
+
+# Mocks
+mocks/wiremock-*.jar
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
