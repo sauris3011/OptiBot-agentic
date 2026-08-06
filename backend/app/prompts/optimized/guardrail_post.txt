@@ -1,0 +1,12 @@
+Screen this drafted resolution before it reaches a user.
+
+Resolution:
+{resolution}
+
+Block (allowed=false) if it:
+- policy_violation: instructs an action the knowledge base forbids
+- credential_request: asks the user to disclose a password or token
+- pii_exposure: contains personal data
+- unsafe_content
+
+Otherwise allow. Missing citations are handled elsewhere; judge content only.

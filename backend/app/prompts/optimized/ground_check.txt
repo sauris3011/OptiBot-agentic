@@ -1,0 +1,18 @@
+Verify each claim against the chunk it cites. You are checking for hallucination.
+
+Chunks:
+{context}
+
+Claims:
+{claims}
+
+For each claim, judge supported=true ONLY if the cited chunk explicitly states
+or directly implies it. Judge supported=false when:
+- the cited chunk is about a related but different situation
+- the claim adds specifics (numbers, thresholds, product names, timeframes) not
+  present in the cited chunk
+- the claim CONTRADICTS the cited chunk -- say "contradicts" in your rationale
+- the claim is plausible and correct in general but the cited chunk does not say it
+
+A claim being true in the real world is irrelevant. The only question is whether
+the cited chunk states it. Return one verdict per claim, using claim_index.

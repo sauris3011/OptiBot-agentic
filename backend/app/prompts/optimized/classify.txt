@@ -1,0 +1,9 @@
+Triage this IT support ticket.
+
+Subject: {subject}
+Body: {body}
+
+category: closed vocabulary, exact match required.
+urgency: business impact, not user tone.
+intent: one line, what the user needs.
+confidence: your certainty in the category.

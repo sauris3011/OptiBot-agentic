@@ -1,0 +1,16 @@
+Write a service desk resolution grounded ONLY in the extracts below.
+
+Extracts:
+{context}
+
+Ticket ({category}, {urgency}):
+{subject}
+{body}
+
+Rules:
+- Each claim is one factual assertion with the chunk_id that states it.
+- chunk_id must be copied exactly from an extract above. Never invent one.
+- If no extract supports a claim, set chunk_id to null.
+- If the extracts do not cover this ticket, return few or no claims and set
+  escalate_recommended to true. Do not fill gaps from general knowledge.
+- next_steps must follow from the claims.
