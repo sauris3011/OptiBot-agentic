@@ -1,0 +1,31 @@
+# OptiBot backend dependencies
+# Installed into .venv by startup.sh / startup.bat
+
+# --- Web layer ---
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-multipart>=0.0.12
+sse-starlette>=2.1.3
+
+# --- Config & validation ---
+pydantic>=2.9.0
+pydantic-settings>=2.6.0
+
+# --- LLM routing (backend only, NFR-1.5) ---
+litellm>=1.52.0
+
+# --- Agent orchestration ---
+langgraph>=0.2.45
+langgraph-checkpoint-sqlite>=2.0.0
+
+# --- RAG: embedded vector store + local embeddings ---
+lancedb>=0.15.0
+pyarrow>=17.0.0
+sentence-transformers>=3.2.0
+numpy>=1.26.0
+
+# --- Observability ---
+structlog>=24.4.0
+
+# --- HTTP client (WireMock tool calls, gateway probes) ---
+httpx>=0.27.0
