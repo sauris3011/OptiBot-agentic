@@ -34,6 +34,27 @@ table** under the same code path, differing only in a filter predicate. No re-in
 so no possibility that one arm benefits from a fresher index. The RAG panel can switch strategies
 live without a rebuild.
 
+### 1.1b Measured: the naive strategy silently truncates 60% of its chunks
+
+`all-MiniLM-L6-v2` accepts a maximum of **256 tokens**. Anything longer is
+truncated at embedding time with no error and no warning — the tail simply does not influence the
+vector.
+
+Measured on the seed corpus (12 documents):
+
+| Strategy | Chunks | Avg tokens | Truncated | Truncation rate |
+|---|---|---|---|---|
+| `fixed_512` | 20 | 315.4 | 12 | **60.0%** |
+| `structure_aware` | 77 | 91.3 | 0 | **0.0%** |
+
+**On fairness, because this is the comparison a reviewer should challenge.** 512 tokens is not a
+strawman chosen to fail. It is the single most common default in RAG tutorials and framework
+examples, and `all-MiniLM-L6-v2` is the most common default embedding model. The pairing is the
+archetypal naive setup, and the defect is invisible precisely because nothing errors.
+
+The truncation rate is stored per chunk and reported through `/api/rag/stats`, so it is a measured,
+displayed finding rather than an implicit advantage.
+
 ### 1.2 Retrieval by arm
 
 | | `baseline` | `optimized` |

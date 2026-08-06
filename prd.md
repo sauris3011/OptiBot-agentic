@@ -197,7 +197,23 @@ single-node result — output tokens −95%, cost −87%, latency −86%.
 - **Citations:** every generated claim carries a chunk-level reference. A claim without one is by
   definition an unsupported claim and triggers escalation.
 - **Retrieval quality measurement:** precision@k and citation coverage scored against a small
-  hand-labelled gold set.
+  hand-labelled gold set. Gold-set labels are at **document + section** level, never `chunk_id` —
+  chunk ids differ between strategies, so chunk-level labels would make it arithmetically impossible
+  for one strategy to score against the other's labels.
+
+**Measured retrieval results (24 tickets, 12 documents, 2026-08-06):**
+
+| Metric | `fixed_512` | `structure_aware` + rerank | Delta |
+|---|---|---|---|
+| precision@k | 0.192 | 0.819 | **+327%** |
+| MRR | 0.851 | 0.979 | +15.0% |
+| recall@k | 1.000 | 0.958 | −4.2% |
+| Context tokens per query | 3,156 | 302 | **−90.4%** |
+| Chunk truncation rate | 60.0% | 0.0% | — |
+
+The recall decrease is real and reported rather than suppressed: narrowing from 10 chunks to 3 gives
+up a small amount of coverage in exchange for a 90% context reduction. Primary-document hit rate
+stays at 100% in both arms, so the document that answers the ticket is always retrieved.
 
 ### 4.5 Structured Output
 

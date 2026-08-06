@@ -13,13 +13,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import routes_settings
+from app.api import routes_rag, routes_settings
 from app.config.model_registry import ModelTierUnresolved, get_registry
 from app.config.settings import get_settings
 from app.llm.tls import configure_tls
 from app.observability.logging import configure_logging, get_logger
 from app.observability.tracer import flush as flush_spans
 from app.persistence.db import close_db, init_db
+from app.rag import store as rag_store
 
 log = get_logger("optibot.main")
 
@@ -58,6 +59,9 @@ async def lifespan(_app: FastAPI):
 
     log.info("shutdown_begin")
     flush_spans()
+    # LanceDB writer released before SQLite closes; an abrupt termination
+    # mid-write is the realistic corruption path (FR-7.5).
+    rag_store.close()
     close_db()
     log.info("shutdown_complete")
 
@@ -85,6 +89,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(routes_settings.router)
+    app.include_router(routes_rag.router)
     return app
 
 

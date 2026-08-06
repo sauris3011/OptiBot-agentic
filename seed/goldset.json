@@ -1,0 +1,182 @@
+{
+  "_readme": {
+    "purpose": "Hand-labelled relevance judgements for retrieval scoring (FR-3.4).",
+    "labelling_level": "document + section heading, NOT chunk_id",
+    "why": "Chunk ids differ between the fixed_512 and structure_aware strategies. Labelling by chunk_id would make it arithmetically impossible for one strategy to score against a gold set derived from the other. Document-level labels are strategy-neutral, so precision@k is a fair comparison. The answer_section field supports a secondary, stricter metric: whether the specific section that answers the ticket was actually retrieved.",
+    "metrics": {
+      "precision_at_k": "fraction of retrieved chunks whose doc_id is in relevant_doc_ids",
+      "section_hit_rate": "whether any retrieved chunk covers answer_section (structure_aware only can report this reliably; fixed_512 chunks carry no section metadata, which is itself the finding)"
+    },
+    "labelled_by": "hand-authored alongside the corpus, before any retrieval was run"
+  },
+  "judgements": [
+    {
+      "ticket_id": "TCK-001",
+      "relevant_doc_ids": ["KB-001", "KB-003"],
+      "primary_doc_id": "KB-001",
+      "answer_section": "MFA token rejected after a password change",
+      "notes": "Cached credential after password change. KB-003 covers the downstream-effects context."
+    },
+    {
+      "ticket_id": "TCK-002",
+      "relevant_doc_ids": ["KB-002"],
+      "primary_doc_id": "KB-002",
+      "answer_section": "User has a new phone and cannot approve prompts",
+      "notes": "Registration is device-bound; phone backup does not carry it."
+    },
+    {
+      "ticket_id": "TCK-003",
+      "relevant_doc_ids": ["KB-004"],
+      "primary_doc_id": "KB-004",
+      "answer_section": "Outlook stuck on \"Trying to connect\"",
+      "notes": "Webmail working confirms local cache fault."
+    },
+    {
+      "ticket_id": "TCK-004",
+      "relevant_doc_ids": ["KB-005"],
+      "primary_doc_id": "KB-005",
+      "answer_section": "Disk nearly full",
+      "notes": "Two signals: post-leave policy refresh and low disk. Both in KB-005."
+    },
+    {
+      "ticket_id": "TCK-005",
+      "relevant_doc_ids": ["KB-006", "KB-003"],
+      "primary_doc_id": "KB-006",
+      "answer_section": "Mapped drive shows a red X",
+      "notes": "Classic stale credential after password change."
+    },
+    {
+      "ticket_id": "TCK-006",
+      "relevant_doc_ids": ["KB-007"],
+      "primary_doc_id": "KB-007",
+      "answer_section": "Job submitted but nothing releases at the device",
+      "notes": "Badge opens doors but is registered to a different identity for print."
+    },
+    {
+      "ticket_id": "TCK-007",
+      "relevant_doc_ids": ["KB-008"],
+      "primary_doc_id": "KB-008",
+      "answer_section": "Software not appearing in Company Portal",
+      "notes": "Entitlement group scoping, not a catalogue fault."
+    },
+    {
+      "ticket_id": "TCK-008",
+      "relevant_doc_ids": ["KB-009"],
+      "primary_doc_id": "KB-009",
+      "answer_section": "Audio or video not working in meetings",
+      "notes": "Dock disconnect reset device selection."
+    },
+    {
+      "ticket_id": "TCK-009",
+      "relevant_doc_ids": ["KB-010"],
+      "primary_doc_id": "KB-010",
+      "answer_section": "New starter account not created on day one",
+      "notes": "Record predates last nightly run, so provisioning failed."
+    },
+    {
+      "ticket_id": "TCK-010",
+      "relevant_doc_ids": ["KB-004"],
+      "primary_doc_id": "KB-004",
+      "answer_section": "Mailbox full and cannot send",
+      "notes": "Large attachments retained in Sent Items."
+    },
+    {
+      "ticket_id": "TCK-011",
+      "relevant_doc_ids": ["KB-012"],
+      "primary_doc_id": "KB-012",
+      "answer_section": "Sync stuck or paused",
+      "notes": "Tethering marks the connection metered."
+    },
+    {
+      "ticket_id": "TCK-012",
+      "relevant_doc_ids": ["KB-005"],
+      "primary_doc_id": "KB-005",
+      "answer_section": "External display not detected",
+      "notes": "Dock firmware is the first check."
+    },
+    {
+      "ticket_id": "TCK-013",
+      "relevant_doc_ids": ["KB-006"],
+      "primary_doc_id": "KB-006",
+      "answer_section": "Access denied on a folder the user could previously open",
+      "notes": "Token issued at sign-in; needs full sign-out."
+    },
+    {
+      "ticket_id": "TCK-014",
+      "relevant_doc_ids": ["KB-011", "KB-002"],
+      "primary_doc_id": "KB-011",
+      "answer_section": "Red flags requiring escalation",
+      "notes": "Social engineering signature: executive claim, urgency, request to bypass callback. Must escalate, never fulfil. This ticket exists to exercise the guardrail and escalation path."
+    },
+    {
+      "ticket_id": "TCK-015",
+      "relevant_doc_ids": ["KB-001"],
+      "primary_doc_id": "KB-001",
+      "answer_section": "Connection drops every few minutes",
+      "notes": "IKE rekey failure via consumer router SIP ALG."
+    },
+    {
+      "ticket_id": "TCK-016",
+      "relevant_doc_ids": ["KB-004"],
+      "primary_doc_id": "KB-004",
+      "answer_section": "Messages disappearing from the inbox",
+      "notes": "Sweep created a persistent rule."
+    },
+    {
+      "ticket_id": "TCK-017",
+      "relevant_doc_ids": ["KB-003"],
+      "primary_doc_id": "KB-003",
+      "answer_section": "Self-service reset",
+      "notes": "Banned-password list, not complexity policy."
+    },
+    {
+      "ticket_id": "TCK-018",
+      "relevant_doc_ids": ["KB-012", "KB-009"],
+      "primary_doc_id": "KB-012",
+      "answer_section": "Shared link recipient gets access denied",
+      "notes": "Default link scope excludes external recipients."
+    },
+    {
+      "ticket_id": "TCK-019",
+      "relevant_doc_ids": ["KB-007"],
+      "primary_doc_id": "KB-007",
+      "answer_section": "Printing produces garbled output or blank pages",
+      "notes": "Driver mismatch after feature update. Vendor driver explicitly must NOT be installed - tests whether the draft contradicts the KB."
+    },
+    {
+      "ticket_id": "TCK-020",
+      "relevant_doc_ids": ["KB-010", "KB-006"],
+      "primary_doc_id": "KB-010",
+      "answer_section": "Mover retains access to their previous team's resources",
+      "notes": "Known gap; requires access review, not direct removal."
+    },
+    {
+      "ticket_id": "TCK-021",
+      "relevant_doc_ids": ["KB-002"],
+      "primary_doc_id": "KB-002",
+      "answer_section": "Account locked after repeated failed attempts",
+      "notes": "Stale credential on a secondary device is the stated common cause."
+    },
+    {
+      "ticket_id": "TCK-022",
+      "relevant_doc_ids": ["KB-012"],
+      "primary_doc_id": "KB-012",
+      "answer_section": "Recovering a deleted file",
+      "notes": "Within 93 days, so recoverable from the site recycle bin."
+    },
+    {
+      "ticket_id": "TCK-023",
+      "relevant_doc_ids": ["KB-012"],
+      "primary_doc_id": "KB-012",
+      "answer_section": "Version history and accidental overwrite",
+      "notes": "Version history, not the recycle bin. Adjacent-but-wrong section is the recycle bin one, so this discriminates precise retrieval."
+    },
+    {
+      "ticket_id": "TCK-024",
+      "relevant_doc_ids": ["KB-005"],
+      "primary_doc_id": "KB-005",
+      "answer_section": "Battery not charging or draining rapidly",
+      "notes": "Needs the 60% design capacity threshold to answer correctly."
+    }
+  ]
+}

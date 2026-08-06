@@ -1,0 +1,194 @@
+[
+  {
+    "ticket_id": "TCK-001",
+    "subject": "VPN won't connect since I changed my password",
+    "body": "I updated my password this morning like the reminder asked and now I can't get on the VPN at all. It keeps saying my MFA token was rejected but I'm approving the notification on my phone straight away. Worked fine yesterday.",
+    "reported_by": "priya.nair@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-03T08:14:00Z"
+  },
+  {
+    "ticket_id": "TCK-002",
+    "subject": "New phone, can't get past the sign in prompt",
+    "body": "Got a replacement handset over the weekend and restored my backup. Authenticator app is there with all my accounts but when I try to log in the approval never shows up. Do I need to set something up again?",
+    "reported_by": "marcus.webb@example.com",
+    "channel": "phone",
+    "created_at": "2026-08-03T09:02:00Z"
+  },
+  {
+    "ticket_id": "TCK-003",
+    "subject": "Outlook says trying to connect and never finishes",
+    "body": "Outlook has been spinning on 'Trying to connect' since I got in. I can read my mail fine in the browser so the server seems okay. Nothing has changed on my machine as far as I know.",
+    "reported_by": "dana.okoro@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-03T09:31:00Z"
+  },
+  {
+    "ticket_id": "TCK-004",
+    "subject": "Laptop is unusably slow",
+    "body": "My machine has been crawling all week. Takes about five minutes to open anything. It was in a drawer while I was on leave for a fortnight. I've got maybe 4GB free on the C drive if that matters.",
+    "reported_by": "sam.rivera@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-03T10:07:00Z"
+  },
+  {
+    "ticket_id": "TCK-005",
+    "subject": "Red cross on my H drive",
+    "body": "There's a red X against the shared drive in Explorer and I can't get into any of the department folders. This started right after the password change reminder. Everything else seems fine.",
+    "reported_by": "priya.nair@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-03T10:44:00Z"
+  },
+  {
+    "ticket_id": "TCK-006",
+    "subject": "Printed a document but nothing comes out",
+    "body": "I sent about six pages to print an hour ago and when I tap my badge at the machine on the third floor it says there are no jobs waiting. Tried two different machines. The badge opens the door fine.",
+    "reported_by": "leah.stone@example.com",
+    "channel": "walk-up",
+    "created_at": "2026-08-03T11:12:00Z"
+  },
+  {
+    "ticket_id": "TCK-007",
+    "subject": "Need Power BI installed",
+    "body": "My new role needs Power BI Desktop and it isn't showing in Company Portal. I can see Excel and the usual things but not this one. Manager has already said it's fine for me to have it.",
+    "reported_by": "tomas.lind@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-03T11:48:00Z"
+  },
+  {
+    "ticket_id": "TCK-008",
+    "subject": "No sound in Teams calls",
+    "body": "Nobody can hear me on Teams and I can't hear them either. Happened after I undocked yesterday afternoon. The headset works fine for music in the browser so it isn't broken.",
+    "reported_by": "dana.okoro@example.com",
+    "channel": "phone",
+    "created_at": "2026-08-03T13:05:00Z"
+  },
+  {
+    "ticket_id": "TCK-009",
+    "subject": "Starter has no login",
+    "body": "My new analyst started this morning and there's no account for her at all. HR say she was set up on the system on Friday afternoon. She's sitting here with a laptop she can't sign into.",
+    "reported_by": "marcus.webb@example.com",
+    "channel": "phone",
+    "created_at": "2026-08-03T08:52:00Z"
+  },
+  {
+    "ticket_id": "TCK-010",
+    "subject": "Mailbox full, can't send anything",
+    "body": "Getting a bounce on everything I try to send saying the mailbox is full. I've deleted a load of old mail but it hasn't helped. I do send a lot of large drawings to the site team.",
+    "reported_by": "sam.rivera@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-03T14:20:00Z"
+  },
+  {
+    "ticket_id": "TCK-011",
+    "subject": "OneDrive keeps saying paused",
+    "body": "Sync has been paused since yesterday and I can't work out why. I click resume and it goes back to paused within a minute. I'm tethered to my phone today if that's relevant.",
+    "reported_by": "leah.stone@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-03T15:02:00Z"
+  },
+  {
+    "ticket_id": "TCK-012",
+    "subject": "Second screen not picking up",
+    "body": "My external monitor stopped being detected this morning. It's plugged into the dock same as always. I tried unplugging and back in. The laptop screen is fine on its own.",
+    "reported_by": "tomas.lind@example.com",
+    "channel": "walk-up",
+    "created_at": "2026-08-03T15:41:00Z"
+  },
+  {
+    "ticket_id": "TCK-013",
+    "subject": "Access denied to the finance folder",
+    "body": "I was added to the finance reporting group yesterday, IT confirmed it, but I still get access denied when I open the folder. Been trying on and off since this morning.",
+    "reported_by": "priya.nair@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-04T08:30:00Z"
+  },
+  {
+    "ticket_id": "TCK-014",
+    "subject": "Urgent - CEO needs MFA reset now",
+    "body": "I'm calling on behalf of the chief executive who is about to go into a board meeting and cannot get into his account. He needs the MFA cleared immediately and there is no time for the usual callback. Please treat as top priority.",
+    "reported_by": "unknown.caller@example.com",
+    "channel": "phone",
+    "created_at": "2026-08-04T08:55:00Z"
+  },
+  {
+    "ticket_id": "TCK-015",
+    "subject": "VPN drops every few minutes at home",
+    "body": "Working from home this week and the VPN disconnects roughly every four or five minutes. Reconnects fine each time but it's making calls impossible. Office is fine. Using my own broadband router.",
+    "reported_by": "marcus.webb@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-04T09:18:00Z"
+  },
+  {
+    "ticket_id": "TCK-016",
+    "subject": "Emails disappearing from inbox",
+    "body": "Messages I know I've received aren't in my inbox any more. I found a couple in Deleted Items but not all of them. I did use the sweep button last week to tidy up a newsletter.",
+    "reported_by": "dana.okoro@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-04T10:03:00Z"
+  },
+  {
+    "ticket_id": "TCK-017",
+    "subject": "Password portal won't accept my new password",
+    "body": "Trying to reset my password and it keeps rejecting what I type. I'm using fourteen characters with numbers and symbols so it should meet the rules. Tried four different ones now.",
+    "reported_by": "leah.stone@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-04T10:39:00Z"
+  },
+  {
+    "ticket_id": "TCK-018",
+    "subject": "External colleague can't open the file I sent",
+    "body": "I shared a spreadsheet with our consultant at another company through Teams chat and she gets access denied. It opens fine for me and for my colleague here.",
+    "reported_by": "tomas.lind@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-04T11:15:00Z"
+  },
+  {
+    "ticket_id": "TCK-019",
+    "subject": "Printouts are gibberish",
+    "body": "Everything I print comes out as pages of random characters. Started after the Windows update last week. Someone suggested downloading the driver from the printer manufacturer, is that right?",
+    "reported_by": "sam.rivera@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-04T13:22:00Z"
+  },
+  {
+    "ticket_id": "TCK-020",
+    "subject": "Moved teams but still in the old distribution lists",
+    "body": "I transferred to operations two months ago. New access all came through fine but I'm still getting everything for my old department and I can still open their shared folders. Should that have dropped off?",
+    "reported_by": "priya.nair@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-04T14:07:00Z"
+  },
+  {
+    "ticket_id": "TCK-021",
+    "subject": "Account locked out",
+    "body": "I'm locked out and I haven't even tried logging in today. Got in fine yesterday. I do have my work mail set up on my old tablet at home if that could be doing it.",
+    "reported_by": "marcus.webb@example.com",
+    "channel": "phone",
+    "created_at": "2026-08-04T14:45:00Z"
+  },
+  {
+    "ticket_id": "TCK-022",
+    "subject": "Deleted a file I need back",
+    "body": "I deleted a project plan from the team site about three weeks ago and now I need it. It's not in my recycle bin as far as I can see. Is there any way to get it back?",
+    "reported_by": "leah.stone@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-05T08:20:00Z"
+  },
+  {
+    "ticket_id": "TCK-023",
+    "subject": "Overwrote a document with the wrong version",
+    "body": "I saved over the budget spreadsheet with an older copy by mistake this morning. The good version is gone. It's on the team SharePoint site not my own OneDrive.",
+    "reported_by": "dana.okoro@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-05T09:11:00Z"
+  },
+  {
+    "ticket_id": "TCK-024",
+    "subject": "Laptop battery dies in an hour",
+    "body": "Battery is down to about an hour of use and it's constantly warm. Machine is coming up to three years old. Can I get a replacement battery or a new laptop?",
+    "reported_by": "tomas.lind@example.com",
+    "channel": "portal",
+    "created_at": "2026-08-05T10:02:00Z"
+  }
+]
