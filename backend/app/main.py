@@ -13,7 +13,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import routes_rag, routes_settings
+from app.api import routes_eval, routes_rag, routes_review, routes_settings, routes_tickets
 from app.config.model_registry import ModelTierUnresolved, get_registry
 from app.config.settings import get_settings
 from app.llm.tls import configure_tls
@@ -90,6 +90,9 @@ def create_app() -> FastAPI:
 
     app.include_router(routes_settings.router)
     app.include_router(routes_rag.router)
+    app.include_router(routes_tickets.router)
+    app.include_router(routes_eval.router)
+    app.include_router(routes_review.router)
     return app
 
 
